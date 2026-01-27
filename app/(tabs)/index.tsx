@@ -52,7 +52,11 @@ function Index() {
                     data={movies}
                     renderItem={({item}) => (
 
-                      <MovieCard/>
+                      <MovieCard
+
+                      {... item}
+                      
+                      />
 
                     )}
                     keyExtractor={(item) => item.id.toString()}
