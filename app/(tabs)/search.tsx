@@ -1,21 +1,24 @@
 import MovieCard from '@/components/MovieCard'
+import SearchBar from "@/components/searchBar"
 import { icons } from '@/constants/icons'
 import { images } from '@/constants/images'
 import { fetchMovies } from '@/services/api'
 import useFetch from '@/services/usefetch'
-import { useRouter } from 'expo-router'
-import React from 'react'
-import { FlatList, Image, View } from 'react-native'
+import React, { useState } from 'react'
+import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 
 const search = () => {
 
-  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
+
   const {data: movies,
-     loading: moviesLoading,
-      error: movieError} = useFetch(() => fetchMovies( {
+     loading,
+      error
+    } = useFetch(() => fetchMovies( {
     query: ''
 
-  }))
+  }), false)
 
 
   return (
@@ -38,10 +41,34 @@ const search = () => {
           }}
 
           ListHeaderComponent={
+
+          <>
             <View className='w-full flex-row justify-center mt-20 items-center'>
               <Image source={icons.logo} className='w-12 h-10'/>
-
             </View>
+
+            <View className='my-5'>
+              <SearchBar placeholder="Search Movies ... "/>
+            </View>
+
+            {loading && (
+              <ActivityIndicator size="large" color= "#0000ff" 
+              className='my-3'/>  
+            )}
+
+            {error && (
+              <Text className="text-red-500 px-5 my-2">
+                Error: {error.message}
+              </Text>
+            )}
+
+          {!loading && !error && 'SEARCH TERM'.trim() && movies && movies.length > 0 && (
+            <Text className="text-xl text-white font-bold">
+              Search Results for {' '}
+              <Text className="text-accent">SEARCH TERM</Text>
+            </Text>
+          )}
+          </>
           }
            />
     </View>
